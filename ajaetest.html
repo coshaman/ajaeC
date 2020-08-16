@@ -133,6 +133,13 @@
 		}
     </style>
     <script>
+		var audio = new Audio();
+    	audio.src = "buble.mp3";
+		audio.addEventListener('ended', function() { 
+			this.currentTime = 0;
+			this.play();
+    	}, false);
+		audio.volume = 0.1;
 		/*var qu = localStorage.getItem("qu");
 		var q = JSON.parse(qu);
 		if (q == null) {
@@ -140,14 +147,25 @@
 		}*/
 		//localStorage.setItem("q", JSON.stringify(qu))
     // qu : 도리가 받을 수 있는 질문 목록, an : 도리가 대답하는 목록, li : 도리의 기존 명령어 목록
+		
+		var time = 60; //기준시간 작성
+		let sum = 0;
+		let sumplus = 0;
+		var min = ""; //분
+		var sec = ""; //초
 		var jbRandom = Math.random();
 		var point = localStorage.getItem("pointa");
 		var pluspoint = 0;
 		let today = new Date();
 		let imi = localStorage.getItem("imich");
 		let nick = localStorage.getItem("nn");
+		let life = 3;
+		let conway = "❤ ❤ ❤"
+		let level = 1;
+		let sc =0;
 		imi *= 1;
 		point *= 1;
+		let isP = false;
 		an = ['불타는 청춘', '요상한 시골 아재', '놀이터 백수', '동네 모자란 사람', '놀이터 힘센 사람', '꼰대', '국밥충', '아재씨', '동네 아재', '아지매', '충청도 아재', '전라도 아재', '경상도 아재']
 		if(nick == null) {
 			
@@ -164,10 +182,11 @@
 		if(isNaN(imi)) {
 			imi = 0;
 		}
-		ajaeq = ['숲속에서 자라는 것 중 가장 야한 것은?', '자동차가 울면?', '딸기가 회사에서 잘리면?', '바람이 귀엽게 부는 곳은 어디일까?', '피카츄가 담배를 주우면서 하는 말은?', '자동차를 톡하고 치면?', '제일 폭발하기 쉬운 나라는?', '광부가 가장 많은 나라는?', '시가 리얼하면?', '소나무가 삐지면?', '소가 불에 타면?', '오리가 얼면?', '맥주가 죽기 전에 남긴 말은?', '세상에서 가장 가난한 왕은?', '칼이 정색하면?', '반성문을 영어로 하면?', '엄마가 길을 잃으면?', '차가 다니는 도로에 갑자기 사람이 뛰어들면?', '신발이 화가 나면?', '누룽지를 영어로 하면?', '높은 곳에서 애를 낳는 동물은?', '자동차가 3대 있으면?', '세상에서 가장 긴 음식은?', '아몬드가 죽으면?', '신사가 자기소개할 때 쓰는 말은?', '호란이가 아프면?', '빵이 시골로 간 까닭은?', '"개가 사람을 가르친다"를 네 글자로 하면?', '미국이 싫으면?', '입이 S자로 되어 있으면?', '고양이가 죽어서 지옥에 가면?', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ]
-		ajaea = ['버섯', '잉카', '딸기시럽', '분당', '피까', '카톡', '부탄', '케냐', '시리얼', '칫솔', '탄소', '언덕', '유언비어', '최저임금', '검정색', '글로벌', '맘마미아', '카놀라유', '신발끈', '바비브라운', '하이에나', '스리랑카', '참기름', '다이아몬드', '신사임당', '병자호란', '소보로', '개인지도', '아메리카노', 'EBS', '헬로키티', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ]
+		ajaeq = ['숲속에서 자라는 것 중 가장 야한 것은?', '자동차가 울면?', '딸기가 회사에서 잘리면?', '바람이 귀엽게 부는 곳은 어디일까?', '피카츄가 담배를 주우면서 하는 말은?', '자동차를 톡하고 치면?', '제일 폭발하기 쉬운 나라는?', '광부가 가장 많은 나라는?', '시가 리얼하면?', '소나무가 삐지면?', '소가 불에 타면?', '오리가 얼면?', '맥주가 죽기 전에 남긴 말은?', '세상에서 가장 가난한 왕은?', '칼이 정색하면?', '반성문을 영어로 하면?', '엄마가 길을 잃으면?', '차가 다니는 도로에 갑자기 사람이 뛰어들면?', '신발이 화가 나면?', '누룽지를 영어로 하면?', '높은 곳에서 애를 낳는 동물은?', '자동차가 3대 있으면?', '세상에서 가장 긴 음식은?', '아몬드가 죽으면?', '신사가 자기소개할 때 쓰는 말은?', '호란이가 아프면?', '빵이 시골로 간 까닭은?', '"개가 사람을 가르친다"를 네 글자로 하면?', '미국이 싫으면?', '입이 S자로 되어 있으면?', '고양이가 죽어서 지옥에 가면?', '국내에 마블보다 4배 큰 기업은?', '녹색은 무슨 색?', '오리가 옳다고 인정하면?', '차 열쇠 색깔은?', '문신을 지우는 방법은?', '고양이한테 "야옹"이라고 하면 뭐라고 답할까?', '개들이 제일 싫어하는 절은?', '레스토랑에서 스튜를 주문했는데 안 나오면 하는 말은?', '투명인간은 몇 명이나 있을까?', '앉으면 졸린 이유는?', '소화기관 내과의사가 퇴근하는 시간은?', 'IS의 과거는?', '석가모니의 직책은?', '자동차가 죽으면 묻히는 무덤은?', '아이를 만든 사람은?']
+		ajaea = ['버섯', '잉카', '딸기시럽', '분당', '피까', '카톡', '부탄', '케냐', '시리얼', '칫솔', '탄소', '언덕', '유언비어', '최저임금', '검정색', '글로벌', '맘마미아', '카놀라유', '신발끈', '바비브라운', '하이에나', '스리랑카', '참기름', '다이아몬드', '신사임당', '병자호란', '소보로', '개인지도', '아메리카노', 'ebs', '헬로키티', '넷마블', '갈색', '덕수긍', '카키색', '무신정변', '왜옹', '보신각', '스튜어디스', '2명', '안자서', '내시경', 'was', '중대장', '부르릉', '허수아비']
+		let tod = 0;
 		function set() {
-			document.getElementById("main").innerHTML = ajaeq[today.getDate()-1];
+			/*document.getElementById("main").innerHTML = ajaeq[today.getDate()-1];
 			document.getElementById("pointma").innerHTML = "포인트 : " + point;
 			document.getElementById("nickma").innerHTML = "닉네임 : " + nick;
 			if(imi == today.getMonth() + 1 + "." + today.getDate()){
@@ -177,24 +196,164 @@
 					document.getElementById("anre1").style.display = "block";
 				}, 1000);
 				
-			}
+			}*/
+			document.getElementById("pointma").innerHTML = "포인트 : " + point;
+			document.getElementById("nickma").innerHTML = "닉네임 : " + nick;
 		}
-		
+		var x;
+		function stimer(){
+			x = setInterval(function() {
+				//parseInt() : 정수를 반환 //몫을 계산
+				sec = time; //나머지를 계산
+
+				document.getElementById("demo").innerHTML = sec + "초";
+				time--;
+
+				//타임아웃 시
+				if (time < 0) {
+					clearInterval(x); //setInterval() 실행을 끝냄
+					document.getElementById("demo").innerHTML = "시간초과";
+					life -= 1;
+					if (life == 3){
+						conway = "❤ ❤ ❤"
+					}
+					else if (life == 2){
+						conway = "❤ ❤"
+					}
+					else if (life == 1){
+						conway = "❤"
+					}
+					else {
+						conway = "☠"
+					}
+					
+					document.getElementById("press").innerHTML = "생명 : " +conway;
+				}}, 1000);
+				if (sc == 1) {
+					clearInterval(x);
+					sc = 0
+				}
+		}
+		function stomer(){
+			clearInterval(x);
+    		isP = true;
+			
+			document.getElementById("press").innerHTML = "생명 : " +conway;
+		}
+		function start(){
+			audio.play();
+			document.getElementById("start").style.display = "none";
+			document.getElementById("close").style.display = "none";
+			document.getElementById("an1").style.display = "block";
+			document.getElementById("an1").focus();
+			document.getElementById("demo").style.display = "block";
+			tod = Math.floor( Math.random() *ajaeq.length);
+			document.getElementById("demo").innerHTML = ajaea[tod].length + "글자";
+			/*document.getElementById("demo").style.display = "block";
+			if (life == 3){
+				conway = "❤ ❤ ❤"
+			}
+			else if (life == 2){
+				conway = "❤ ❤"
+			}
+			else if (life == 1){
+				conway = "❤"
+			}
+			else {
+				conway = "☠"
+			}
+			document.getElementById("press").innerHTML = "생명 : " +conway;*/
+			//let tod = Math.floor( jbRandom *ajaeq.length);
+			document.getElementById("main").innerHTML = level + ". " + ajaeq[tod];
+			time = 60;
+			x = setInterval(function() {
+				//parseInt() : 정수를 반환 //몫을 계산
+				sec = time; //나머지를 계산
+
+				document.getElementById("press").innerHTML = sec + "초";
+				time--;
+
+				//타임아웃 시
+				if (time < 0) {
+					clearInterval(x); //setInterval() 실행을 끝냄
+					document.getElementById("press").innerHTML = "시험 종료";
+					document.getElementById("an1").style.display = "none";
+					//document.getElementById("an1").style.display = "none";
+					//document.getElementById("anre1").style.display = "block";
+					document.getElementById("an1").value = null;
+					document.getElementById("main").innerHTML = "놀랍구먼! " + sum + "개의 문제를 해결해 " + sumplus + "냥을 얻었고, 총 엽전은 " + point + "냥이구려!";
+					/*life -= 1;
+					if (life == 3){
+						conway = "❤ ❤ ❤"
+					}
+					else if (life == 2){
+						conway = "❤ ❤"
+					}
+					else if (life == 1){
+						conway = "❤"
+					}
+					else {
+						conway = "☠"
+					}
+					
+					document.getElementById("press").innerHTML = "생명 : " +conway;*/
+				}}, 1000);
+		}
 		function ch1(){
-			if(document.getElementById("an1").value == ajaea[today.getDate()-1]){
-				
-				
+			if(document.getElementById("an1").value == ajaea[tod] && time >= 0){
 				document.getElementById("an1").style.display = "none";
-				document.getElementById("anre1").style.display = "block";
-				pluspoint = Math.floor( jbRandom *7 + 3);
+				//document.getElementById("an1").style.display = "none";
+				//document.getElementById("anre1").style.display = "block";
+				document.getElementById("an1").value = null;
+				pluspoint = Math.round(level / 5);
 				point += pluspoint;
+				sumplus += pluspoint;
+				sum += 1;
+				level += 1;
+				
 				localStorage.setItem("pointa", point);
-				localStorage.setItem("imich", today.getMonth() + 1 + "." + today.getDate());
-				document.getElementById("anre1").innerHTML = "정답: " + ajaea[today.getDate()-1] + '<p><span style="font-size: 0.65em; font-family: "Chilanka", cursive;" id = "anre2"> 포인트가 ' + pluspoint + '점 올랐어요!</span></p>';
+				document.getElementById("demo").innerHTML = "정답: " + ajaea[tod] + '<p><span style="font-size: 0.65em; font-family: "Chilanka", cursive;" id = "anre2"> 포인트가 ' + pluspoint + '점 올랐어요!</span></p>';
 				document.getElementById("pointma").innerHTML = "포인트 : " + point;
+				tod = Math.floor( Math.random() * ajaeq.length);
+				setTimeout(function(){
+					document.getElementById("an1").value = null;
+					document.getElementById("an1").style.display = "block";
+					document.getElementById("demo").style.display = "block";
+					document.getElementById("an1").focus();
+					//document.getElementById("demo").innerHTML = "15초";
+					document.getElementById("main").innerHTML = level + ". " + ajaeq[tod];
+					document.getElementById("demo").innerHTML = ajaea[tod].length + "글자";
+					//stimer;
+				}, 500)
+			}
+			else if(document.getElementById("an1").value == "패스" && time >= 0){
+				document.getElementById("an1").style.display = "none";
+				//document.getElementById("an1").style.display = "none";
+				//document.getElementById("anre1").style.display = "block";
+				document.getElementById("an1").value = null;
+				pluspoint = 5;
+				point -= pluspoint;
+				sumplus -= pluspoint;
+				level += 1;
+				
+				localStorage.setItem("pointa", point);
+				document.getElementById("demo").innerHTML = "정답: " + ajaea[tod] + '<p><span style="font-size: 0.65em; font-family: "Chilanka", cursive;" id = "anre2"> 포인트가 ' + pluspoint + '점 내려갔어요!</span></p>';
+				document.getElementById("pointma").innerHTML = "포인트 : " + point;
+				tod = Math.floor( Math.random() * ajaeq.length);
+				setTimeout(function(){
+					document.getElementById("an1").value = null;
+					document.getElementById("an1").style.display = "block";
+					document.getElementById("demo").style.display = "block";
+					document.getElementById("an1").focus();
+					//document.getElementById("demo").innerHTML = "15초";
+					document.getElementById("main").innerHTML = level + ". " + ajaeq[tod];
+					document.getElementById("demo").innerHTML = ajaea[tod].length + "글자";
+					//stimer;
+				}, 1000)
 			}
 		}
     </script>
+    
 </head>
 <body style="text-align: center; background-color: #00005a;" onload="set();">
    
@@ -225,11 +384,40 @@
     
     <div style="font-family: webisfree;text-align: right; margin-right: 2%; margin-top: 1%;" id="pointma">포인트 : </div>-->
 	<div class="main wow bounceInUp" style='width: 80%; text-align: center;'>
-		<span id="main" style="font-family: webisfree, cursive;font-size: 4em;" data-text="NEW RETRO TEXT">이 메세지가 보인다면 새로고침 해주세요</span>
-		<p><span style="font-size: 1.5em">오늘의 아재개그</span></p>
-		<input class="form-control form-control-lg" type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : block; margin : 0 auto;" onkeyup="ch1();">
+		<span id="main" style="font-family: webisfree, cursive;font-size: 3.5em;" data-text="NEW RETRO TEXT">아재-模擬考査(아재모의고사)</span>
+		<p><span style="font-size: 1.5em" id="press">press start</span></p>
+		<button type="button" class="btn btn-outline-dark" onclick="start();" id="start"><span style="font-family: webisfree, cursive;">start</span></button>
+		<input class="form-control form-control-lg" type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : none; margin : 0 auto;" onkeyup="ch1();" autofocus/>
 		<!--<input type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : block;margin : 0 auto;" onkeyup="ch1();">-->
+		<p><span style="font-size: 1em; font-family: webisfree" id = "close">답안 작성 팁. 답안을 적으면 자동으로 전송됩니다. 문제를 많이 풀수록 점수가 더 많이 높아집니다. 패스라고 적으면 문제가 패스되고, 포인트가 5점 줄어듭니다. 또, 답에는 띄어쓰기가 없으며 영어 답의 경우 모두 소문자입니다. 마지막으로 답에 숫자가 들어갈 수 있으며, 비슷하더라도 틀릴 수 있으니 확신이 간다면 여러가지로 작성해주세요(ex 1명, 한명, one명 등)</span></p>
+   
+   <div id="ViewTimer"></div>
 	</div>
-	<p><span style="font-size: 2.6em; display: none;font-family: webisfree" id = "anre1">이 메세지가 보인다면 새로고침 해주세요</span></p>		
+	<p><span style="font-size: 2.6em; display: none;font-family: webisfree" id = "demo">이 메세지가 보인다면 새로고침 해주세요</span></p>
+	
+	<script>
+		
+		var time = 15; //기준시간 작성
+		var min = ""; //분
+		var sec = ""; //초
+
+		//setInterval(함수, 시간) : 주기적인 실행
+		function x(){
+			setInterval(function() {
+				//parseInt() : 정수를 반환 //몫을 계산
+				sec = time; //나머지를 계산
+
+				document.getElementById("demo").innerHTML = sec + "초";
+				time--;
+
+				//타임아웃 시
+				if (time < 0) {
+					clearInterval(x); //setInterval() 실행을 끝냄
+					document.getElementById("demo").innerHTML = "시간초과";
+				}
+			}, 1000);
+		}
+	
+	</script>		
 </body>
 </html>
