@@ -278,10 +278,20 @@
 					clearInterval(x); //setInterval() 실행을 끝냄
 					document.getElementById("press").innerHTML = "시험 종료";
 					document.getElementById("an1").style.display = "none";
+					document.getElementById("demo").style.display = "none";
 					//document.getElementById("an1").style.display = "none";
 					//document.getElementById("anre1").style.display = "block";
 					document.getElementById("an1").value = null;
 					document.getElementById("main").innerHTML = "놀랍구먼! " + sum + "개의 문제를 해결해 " + sumplus + "냥을 얻었고, 총 엽전은 " + point + "냥이구려!";
+					setTimeout(function(){
+						document.getElementById("main").innerHTML = "놀랍구먼! " + sum + "개의 문제를 해결해 " + sumplus + "냥을 얻었고, 총 엽전은 " + point + "냥이구려!";
+						document.getElementById("press").innerHTML = "시험 종료";
+						document.getElementById("an1").style.display = "none";
+						document.getElementById("demo").style.display = "none";
+						//document.getElementById("an1").style.display = "none";
+						//document.getElementById("anre1").style.display = "block";
+						document.getElementById("an1").value = null;
+					}, 50)
 					/*life -= 1;
 					if (life == 3){
 						conway = "❤ ❤ ❤"
@@ -300,7 +310,8 @@
 				}}, 1000);
 		}
 		function ch1(){
-			if(document.getElementById("an1").value == ajaea[tod] && time >= 0){
+			//alert(Event.keyCode);
+			if(document.getElementById("an1").value == ajaea[tod] + ' ' && time >= 0){
 				document.getElementById("an1").style.display = "none";
 				//document.getElementById("an1").style.display = "none";
 				//document.getElementById("anre1").style.display = "block";
@@ -310,7 +321,7 @@
 				sumplus += pluspoint;
 				sum += 1;
 				level += 1;
-				
+
 				localStorage.setItem("pointa", point);
 				document.getElementById("demo").innerHTML = "정답: " + ajaea[tod] + '<p><span style="font-size: 0.65em; font-family: "Chilanka", cursive;" id = "anre2"> 포인트가 ' + pluspoint + '점 올랐어요!</span></p>';
 				document.getElementById("pointma").innerHTML = "포인트 : " + point;
@@ -326,7 +337,7 @@
 					//stimer;
 				}, 500)
 			}
-			else if(document.getElementById("an1").value == "패스" && time >= 0){
+			else if(document.getElementById("an1").value == "패스 " && time >= 0){
 				document.getElementById("an1").style.display = "none";
 				//document.getElementById("an1").style.display = "none";
 				//document.getElementById("anre1").style.display = "block";
@@ -335,7 +346,7 @@
 				point -= pluspoint;
 				sumplus -= pluspoint;
 				level += 1;
-				
+
 				localStorage.setItem("pointa", point);
 				document.getElementById("demo").innerHTML = "정답: " + ajaea[tod] + '<p><span style="font-size: 0.65em; font-family: "Chilanka", cursive;" id = "anre2"> 포인트가 ' + pluspoint + '점 내려갔어요!</span></p>';
 				document.getElementById("pointma").innerHTML = "포인트 : " + point;
@@ -350,6 +361,9 @@
 					document.getElementById("demo").innerHTML = ajaea[tod].length + "글자";
 					//stimer;
 				}, 1000)
+			}
+			else {
+				document.getElementById("an1").value = null;
 			}
 		}
     </script>
@@ -387,9 +401,9 @@
 		<span id="main" style="font-family: webisfree, cursive;font-size: 3.5em;" data-text="NEW RETRO TEXT">아재-模擬考査(아재모의고사)</span>
 		<p><span style="font-size: 1.5em" id="press">press start</span></p>
 		<button type="button" class="btn btn-outline-dark" onclick="start();" id="start"><span style="font-family: webisfree, cursive;">start</span></button>
-		<input class="form-control form-control-lg" type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : none; margin : 0 auto;" onkeyup="ch1();" autofocus/>
+		<input class="form-control form-control-lg" type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : none; margin : 0 auto;" onkeyup="if(event.keyCode == 32){ch1();}" autofocus/>
 		<!--<input type="text" name = "an1" id="an1" placeholder="자동으로 답안 전송" style="width: 50%;display : block;margin : 0 auto;" onkeyup="ch1();">-->
-		<p><span style="font-size: 1em; font-family: webisfree" id = "close">답안 작성 팁. 답안을 적으면 자동으로 전송됩니다. 문제를 많이 풀수록 점수가 더 많이 높아집니다. 패스라고 적으면 문제가 패스되고, 포인트가 5점 줄어듭니다. 또, 답에는 띄어쓰기가 없으며 영어 답의 경우 모두 소문자입니다. 마지막으로 답에 숫자가 들어갈 수 있으며, 비슷하더라도 틀릴 수 있으니 확신이 간다면 여러가지로 작성해주세요(ex 1명, 한명, one명 등)</span></p>
+		<p><span style="font-size: 1em; font-family: webisfree" id = "close">답안 작성 팁. 스페이스키를 누르면 전송됩니다. 문제를 많이 풀수록 점수가 더 많이 높아집니다. 패스 라고 적으면 문제가 패스되고, 포인트가 5점 줄어듭니다. 또, 답에는 띄어쓰기가 없으며 영어 답의 경우 모두 소문자입니다. 마지막으로 답에 숫자가 들어갈 수 있으며, 비슷하더라도 틀릴 수 있으니 확신이 간다면 여러가지로 작성해주세요(ex 1명, 한명, one명 등)</span></p>
    
    <div id="ViewTimer"></div>
 	</div>
